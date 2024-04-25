@@ -16,18 +16,20 @@ class BlogCardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 250,
+      height: 180,
       child: Card(
         key: ValueKey(blog?.uuid),
-        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        margin: const EdgeInsets.all(5.0),
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(10.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               _itemHeader(blog!),
               SizedBox(height: 5),
               Flexible(child: _itemBody(blog!)),
-              _itemFooter(blog!)
+              // _itemFooter(blog!)
             ],
           ),
         ),
@@ -36,55 +38,66 @@ class BlogCardItem extends StatelessWidget {
   }
 
   Widget _itemHeader(Blog blog) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Text(
-          _formatTimeElapsed(blog.createdDate),
-          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+    return Padding(
+      padding: const EdgeInsets.all(1.0),
+      child: SizedBox(
+        height: 30,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              _formatTimeElapsed(blog.createdDate),
+              style: const TextStyle(
+                  fontStyle: FontStyle.italic, color: Colors.grey),
+            ),
+            const PopupMenu(
+              items: [
+                PopupMenuItem<Item>(value: Item.view, child: Text('view')),
+                PopupMenuItem<Item>(value: Item.edit, child: Text('edit')),
+                PopupMenuItem<Item>(value: Item.delete, child: Text('delete')),
+              ],
+            ),
+          ],
         ),
-        //may have to create a different class for the popup menu button!
-        PopupMenu(items: [
-          PopupMenuItem<Item>(value: Item.view, child: Text('view')),
-          PopupMenuItem<Item>(value: Item.edit, child: Text('edit')),
-          PopupMenuItem<Item>(value: Item.delete, child: Text('delete')),
-        ])
-      ],
+      ),
     );
   }
 
   Widget _itemBody(Blog blog) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // String titleSnippet = blog.title.length >= 100 ? blog.title.substring(0, 100) : blog.title;
-              Text(
-                blog.title,
-                overflow: TextOverflow.fade,
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  blog.title.length > 30
+                      ? "${blog.title.substring(0, 30)}..."
+                      : blog.title,
+                  overflow: TextOverflow.fade,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
-              Text(
-                blog.blogBody,
-                // blog.blogBody.length >= 200
-                //     ? blog.blogBody.substring(0, 200)
-                //     : blog.blogBody,
-                softWrap: true,
-                maxLines: 2, //
-                overflow: TextOverflow.ellipsis,
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  blog.blogBody,
+                  style:  TextStyle(color: Colors.grey),
+                  softWrap: true,
+                  maxLines: 3, //
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
         ),
-        SizedBox(width: 8),
-        //having a fixed size for the image
-        Container(
+        const SizedBox(width: 8),
+        SizedBox(
           width: 70,
           height: 70,
           child: ClipRRect(
@@ -107,7 +120,8 @@ class BlogCardItem extends StatelessWidget {
       children: <Widget>[
         Checkbox(
           checkColor: Colors.white,
-          fillColor: MaterialStateProperty.resolveWith((states) => Colors.green),
+          fillColor:
+              MaterialStateProperty.resolveWith((states) => Colors.green),
           value: true,
           onChanged: (bool? value) {
             print("blog view");
