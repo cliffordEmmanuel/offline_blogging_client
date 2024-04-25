@@ -55,38 +55,26 @@ class _BlogPageState extends State<BlogPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    const String appTitle = "Offline Blogging Client";
+
+    return Scaffold(
         appBar: AppBar(
-            title: const Text("Offline Blogging Client"),
-            bottom: TabBar(
-              isScrollable: true,
-              tabs: [
-                Tab(text: "Published!"),
-                Tab(
-                  text: "Deleted!",
-                )
-              ],
-            )),
-        body: TabBarView(
-          children: [
-            BlogsList(
-              title: "published",
-              blogs: createdBlogsList,
-            ),
-            BlogsList(
-              title: "deleted",
-              blogs: deletedBlogsList,
-            )
-          ],
+          title: const Text(appTitle),
         ),
+       //maybe i'll just have the deleted as a tab
+       body: Container(
+         child: BlogsList(
+               title: "published",
+               blogs: createdBlogsList,
+             ),
+         ),
         floatingActionButton: FloatingActionButton(
           onPressed: _incrementCounter,
           tooltip: "Create new post",
           child: const Icon(Icons.add),
         ),
-      ),
+
+
     );
   }
 }
