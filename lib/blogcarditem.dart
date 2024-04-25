@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'blog.dart';
+import 'popup_menu.dart';
 
 class BlogCardItem extends StatelessWidget {
   final Blog? blog;
@@ -14,28 +15,41 @@ class BlogCardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      key: ValueKey(blog?.uuid),
-      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            _itemHeader(blog!),
-            SizedBox(height: 8),
-            _itemBody(blog!),
-            // SizedBox(height: 8),
-            _itemFooter(blog!)
-          ],
+    return SizedBox(
+      height: 250,
+      child: Card(
+        key: ValueKey(blog?.uuid),
+        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              _itemHeader(blog!),
+              SizedBox(height: 5),
+              Flexible(child: _itemBody(blog!)),
+              _itemFooter(blog!)
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _itemHeader(Blog blog) {
-    return Text(
-      _formatTimeElapsed(blog.createdDate),
-      style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          _formatTimeElapsed(blog.createdDate),
+          style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+        ),
+        //may have to create a different class for the popup menu button!
+        PopupMenu(items: [
+          PopupMenuItem<Item>(value: Item.view, child: Text('view')),
+          PopupMenuItem<Item>(value: Item.edit, child: Text('edit')),
+          PopupMenuItem<Item>(value: Item.delete, child: Text('delete')),
+        ])
+      ],
     );
   }
 
@@ -51,10 +65,10 @@ class BlogCardItem extends StatelessWidget {
               Text(
                 blog.title,
                 overflow: TextOverflow.fade,
-                style: TextStyle(fontWeight: FontWeight.bold ),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
-                height: 8,
+                height: 5,
               ),
               Text(
                 blog.blogBody,
@@ -71,8 +85,8 @@ class BlogCardItem extends StatelessWidget {
         SizedBox(width: 8),
         //having a fixed size for the image
         Container(
-          width: 100,
-          height: 100,
+          width: 70,
+          height: 70,
           child: ClipRRect(
             borderRadius:
                 BorderRadius.circular(8), // specifying a bounded rectangle
@@ -87,14 +101,20 @@ class BlogCardItem extends StatelessWidget {
   }
 
   Widget _itemFooter(Blog blog) {
+    //will fix later!!!!
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        TextButton(
-          onPressed: () {
+        Checkbox(
+          checkColor: Colors.white,
+          fillColor: MaterialStateProperty.resolveWith((states) => Colors.green),
+          value: true,
+          onChanged: (bool? value) {
             print("blog view");
+            // setState(() {
+            //   value=false;
+            // });
           },
-          child: Text("View"),
         ),
       ],
     );
@@ -113,5 +133,37 @@ String _formatTimeElapsed(DateTime date) {
     return '${difference.inMinutes}m ago';
   } else {
     return 'Just now';
+  }
+}
+
+///////////////////////////////////
+//building a popupmenu
+
+// This is the type used by the popup menu below.
+enum Item { view, edit, delete }
+
+class PopupMenu extends StatefulWidget {
+  final List<PopupMenuItem<Item>> items;
+
+  const PopupMenu({Key? key, required this.items}) : super(key: key);
+
+  @override
+  State<PopupMenu> createState() => _PopupMenuState();
+}
+
+class _PopupMenuState extends State<PopupMenu> {
+  Item? selectedItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<Item>(
+      initialValue: selectedItem,
+      onSelected: (Item item) {
+        setState(() {
+          selectedItem = item;
+        });
+      },
+      itemBuilder: (BuildContext context) => widget.items,
+    );
   }
 }
