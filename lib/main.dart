@@ -67,17 +67,6 @@ class _BlogPageState extends State<BlogPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Container(
-          //   padding: const EdgeInsets.only(bottom: 5),
-          //   child:
-          //   const Divider(
-          //     color: Colors.grey,
-          //     height: 1,
-          //     indent: 20,
-          //     endIndent: 20,
-          //   ),
-          // ),
-
           Expanded(
             child: BlogsList(
               title: "published",
