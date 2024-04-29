@@ -22,7 +22,7 @@ class Blog {
   DateTime createdDate;
   DateTime? editedAt;
   String blogContent;
-  String? imageData;  //stores image data as string of bytes
+
 
   Blog({
     this.id,
@@ -31,7 +31,6 @@ class Blog {
     required this.createdDate,
     this.editedAt,
     required this.blogContent,
-    this.imageData, //stores image data...
   });
 
 
@@ -90,34 +89,3 @@ String formatTimeElapsed(DateTime date) {
     return 'Just now';
   }
 }
-
-Image imageFromBase64String(String? base64String) {
-  return Image.memory(base64Decode(base64String!));
-}
-
-Uint8List dataFromBase64String(String base64String) {
-  return base64Decode(base64String);
-}
-
-String base64String(Uint8List data) {
-  return base64Encode(data);
-}
-
-
-// creates helper methods for encoding and decoding image data...
-
-encodeImage(File imageFile)  async {
-  Uint8List bytes = await imageFile.readAsBytes(); //this returns a Uint8List object
-  return base64.encode(bytes); // convert to string for storage!!
-}
-
-Image decodeImageData(String base64String) {
-    return Image.memory(
-      base64Decode(base64String),
-      fit: BoxFit.fill,
-    );
-}
-
-
-
-

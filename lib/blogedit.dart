@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 import 'blog.dart';
 import 'databasehelper.dart';
@@ -12,14 +10,12 @@ class EditBlog extends StatefulWidget {
       onEditComplete; // this is to pass edit events back to bloglist onCreateComplete
   final VoidCallback?
       onCreateComplete; // to emit creation events back to bloglist...
-  Image? selectedImage; // for image
 
   EditBlog({
     super.key,
     this.blog,
     this.onEditComplete,
     this.onCreateComplete,
-    this.selectedImage,
   });
 
   @override
@@ -31,7 +27,7 @@ class _EditBlogState extends State<EditBlog> {
   String _title = "";
   String _content = "";
   bool _isNewBlog = false; // Flag to indicate creating a new blog
-  String? _imageData;
+
 
   @override
   void initState() {
@@ -41,30 +37,11 @@ class _EditBlogState extends State<EditBlog> {
     if (_isNewBlog) {
       _title = "";
       _content = "";
-      _imageData;
     } else {
       _title = widget.blog!.title;
       _content = widget.blog!.blogContent;
-      // _imagedata = widget.blog!.imageData;
     }
   }
-
-  // handling image selection from both gallery and camera
-  pickImage({ImageSource source = ImageSource.gallery}) {
-    ImagePicker().pickImage(source: source).then((imgFile) async {
-      return base64String(await imgFile!.readAsBytes());
-    });
-  }
-
-  //   final imagePicker = ImagePicker();
-  //   final pickedFile = await imagePicker.pickImage(source: source);
-  //   if (pickedFile != null) {
-  //     return File(pickedFile.path);
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
 
 
 
@@ -138,43 +115,6 @@ class _EditBlogState extends State<EditBlog> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Image Handling!!! not working as expected!!
-                widget.selectedImage != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: widget.selectedImage
-                        // child: Image.memory(
-                        //   widget.selectedImage,
-                        //   fit: BoxFit.contain,
-                        //   width: 600,
-                        //   height: 240,
-                        // ),
-                      )
-                    : const SizedBox(),
-                // const Spacer(),
-                ElevatedButton(
-                  onPressed: () async {
-                    widget.selectedImage =
-                        await pickImage(source: ImageSource.camera);
-                    setState(() {
-                      //trigger ui rebuild
-                    });
-                  },
-                  child: const Text('Capture Image'),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    _imageData = pickImage(source: ImageSource.gallery);
-                    setState(() {
-                      //trigger ui rebuild
-                      widget.selectedImage = imageFromBase64String(_imageData);
-                    });
-
-                    // print(encodeImage(widget.selectedImage!));
-                  },
-                  child: const Text('Select from Gallery'),
-                ),
               ],
             ),
           ),

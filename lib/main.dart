@@ -41,9 +41,6 @@ class _BlogPageState extends State<BlogPage> {
   @override
   void initState() {
     super.initState();
-    // TODO: populating the db with test data...remove after testing!
-    // DatabaseHelper.instance.insertMultipleBlogs(createdBlogs);
-    // Fetch blogs on init!!
     _blogsFuture = DatabaseHelper.instance.getBlogs();
   }
 
