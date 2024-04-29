@@ -3,61 +3,20 @@ import 'blog.dart';
 final uuid = UUID();
 final createdBlogs = [
   Blog(
+      uuid: uuid.generate(),
+      title: "Test blog 2!!!",
+      createdDate: DateTime.now().subtract(const Duration(days: 1)),
+      blogContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    // imageData: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJ8AzgMBIgACEQEDEQH/xAAbAAADAQEBAQEAAAAAAAAAAAAEBQYDAgEHAP/EAEcQAAIBAgQEBAMGAwYEAwkBAAECAwQRABIhMQUTQVEiYXGBFDKRBiNCUnKhYrHBFTOCktHwJFNzskPh8RY0NVRjoqOzwgf/xAAZAQADAQEBAAAAAAAAAAAAAAABAgMEAAX/xAAmEQACAgICAQQCAwEAAAAAAAAAAQIRAyESMUETIlFhMoFCccEU/9oADAMBAAIRAxEAPwCDrUEdWRFK3xB5kpRTYgCR1uve2S52I31AJX2OtSefNO0EbuQWdozyptLXcbq38YHU9CcD/aWfkVPDOJrFGbtnSPMy3Fo5NSrBgc8j6gjTbC88VpKt3kqoDSSsxN6SMGP0EZYW9mt5dcBO1sh6bW4jWKham4okUjIy5GZxIyjwZdbvfKVINg17d8u2PPsf9nEfi0FTW1VFIkDcw0lPUJNLKR0Cgm47+WEdfxGJqQUlAJVhduZOzgIZWGwIBOg7X1Jv2wBDNJBIksDukqEMjobFSNbg9D5jAkpNPZXGuJ9H43HCDJyoaiPM7TSycqNUzk31d5Ao7WK9AQAQMSVRFlCvNQLMxvrHXoyyAbmyksT55jb2xS8N+0U3FuGPPOiPUUa5pRfxBOroD001HT8JF8pXcToo5lAhSKreUXj+J0lksLHJKtsxGxV/EO2IwuOmVYipuLUdO4ePg9OLfi58uf2ObT2F/PGv9t0nPMh4XER+QiIg/wD47/vj1aqRYjT09W0eQWNLXIpHoGIsfQhfLGfD5qatn5DcHjkZ7/8",
+  ),
+  Blog(
     uuid: uuid.generate(),
-    title: "Figures figures figures!!!",
+    title: "Test Blog 1!!!",
     createdDate: DateTime.now().subtract(const Duration(days: 4)),
-    blogBody:
-        "These figures suggest that mobile phones are relatively in high use by a large section of the human population. This boon of mobile devices has also come with a large variety of apps available for use each with varying degrees of security and privacy. ",
-    imageURL: "https://i.pravatar.cc/300?img=65",
-  ),
-  Blog(
-    uuid: uuid.generate(),
-    title: "Malicious is fair fair fair!!!",
-    createdDate: DateTime.now().subtract(const Duration(days: 1)),
-    blogBody:
-        "It is also fair to say that any person or group of persons with malicious intent can exploit these many vulnerabilities. It is therefore crucial to understand the risks associated with mobile apps as well as how they have been addressed so far and the strategies that can be further implemented.",
-    imageURL: "https://i.pravatar.cc/300?img=49",
-  ),
-  Blog(
-    uuid: uuid.generate(),
-    title: "State of the mobile app!!!",
-    createdDate: DateTime.now().subtract(const Duration(days: 30)),
-    blogBody:
-        "This report discusses the current state of mobile app security and outlines strategies that can be implemented within the mobile app development process, the mobile platforms on which these developed apps are run and lastly the app-store ecosystem. ",
-    imageURL: "https://i.pravatar.cc/300?img=50",
-  ),
-  Blog(
-    uuid: uuid.generate(),
-    title: "Testing this Tessssstttingsgseeisnignwineiwqnteiin!!!",
-    createdDate: DateTime.now().subtract(const Duration(days: 5)),
-    blogBody:
-    "This report discusses the current state of mobile app security and outlines strategies that can be implemented within the mobile app development process, the mobile platforms on which these developed apps are run and lastly the app-store ecosystem. ",
-    imageURL: "https://i.pravatar.cc/300?img=50",
-  ),
-  Blog(
-    uuid: uuid.generate(),
-    title: "LETS Go!!!",
-    createdDate: DateTime.now().subtract(const Duration(days: 90)),
-    blogBody:
-    "This report discusses the current state of mobile app security and outlines strategies that can be implemented within the mobile app development process, the mobile platforms on which these developed apps are run and lastly the app-store ecosystem. ",
-    imageURL: "https://i.pravatar.cc/300?img=50",
-  ),
-];
-
-final deletedBlogs = [
-  Blog(
-    uuid: uuid.generate(),
-    title: "Lorem nada nada nada !!!",
-    createdDate: DateTime.now().subtract(const Duration(days: 20)),
-    blogBody: "it doesn't get better than this!!!!!",
-    imageURL: "https://i.pravatar.cc/300?img=30",
-  ),
-  Blog(
-    uuid: uuid.generate(),
-    title: "Not good not good!",
-    createdDate: DateTime.now().subtract(const Duration(days: 1)),
-    blogBody: "Lorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsumLorem ipsum",
-    imageURL: "https://i.pravatar.cc/300?img=16",
+    blogContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    // imageData: "SW1hZ2UoaW1hZ2U6IEFzc2V0SW1hZ2UoYnVuZGxlOiBudWxsLCBuYW1lOiAiYXNzZXRzL3BsYWNlaG9sZGVyLnBuZyIpLCBhbGlnbm1lbnQ6IEFsaWdubWVudC5jZW50ZXIp",
   ),
 
-];
+  //imageData: "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMSEhUSEhISFRUXFxUVFRUVEhcVFRUQFRUWFxUVFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGi8lICUtLS0tLystLS0tLS0tLS0tLS0vLS8tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLf/AABEIAOEA4QMBIgACEQEDEQH/xAAbAAACAgMBAAAAAAAAAAAAAAAEBQMGAAECB//EAEQQAAEDAgQDBgMFBQYEBwAAAAEAAgMEEQUSITFBUWEGEyJxgZEyUrEUI0Kh0TNiweHwFUNTcoKSBxY08RckVGODk8L/xAAaAQACAwEBAAAAAAAAAAAAAAACAwABBAUG/8QAMhEAAgIBAwIEBAQGAwAAAAAAAAECEQMEITESQRMiUWEFMnGRgdHh8BQjUnKhsRUzQv/aAAwDAQACEQMRAD8AbRlEAoQKUP0XORiOnyqF0qincgZKpU0WCMdnqXn5Rb3TDMEhwqa7pHc3I506JqmXLkJlAKBlke0HI4i+miw1C0991dIKLrdCPuJYySxzgSbkgkG/NPOz1U6thlilY/I68TyBYOda4LSbgPAsduC01O+zDWxvuSS2TMe6t4M7ACHkjUOvppwurh09SbNKn17MrMUIwuYTQSSODXZKiOTLd0Q1do0DxsALvK/Dfp+L93XzvY8sjqGNkBa42J0IcLb7vcmX/EuN0bYsRp2BkT3Bkpy2cXxk93KWkcbvbfW4sCqlRdmXVHeR3DW07bud/wDIGhgB2N3HToVUsCTblu339v0L6aTs9HoMWMjGjMHZQW5gbkjXS/8AqPusxCGV/ijdYgAZQMpygcDf9FW6GnEAAYdtL7aDYWCaNxqwsWgrjzw54T647/UzpkD8Aqb/ALIm/JzSdfIpnhGAkOHfh4HysaXHzc5ujR63TfsfiPf5xma1zAPCSNWG/ibfa1vTTmmtHJHIHOhc12viLTfW3I7aeS1
+
+ ];

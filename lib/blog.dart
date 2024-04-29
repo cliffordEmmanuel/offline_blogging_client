@@ -5,27 +5,78 @@
 // Main blog item body text
 // Image
 
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
+
+
+import 'package:flutter/material.dart';
+import 'dart:async';
+
 
 class Blog {
-  final String uuid;
-  final String title;
-  final DateTime createdDate;
-  final DateTime? editedAt;
-  final String blogBody;
-  final String imageURL;
+  final int? id; // this is for the database!!
+  String uuid;
+  String title;
+  DateTime createdDate;
+  DateTime? editedAt;
+  String blogContent;
+  String? imageData;  //stores image data as string of bytes
 
   Blog({
+    this.id,
     required this.uuid,
     required this.title,
     required this.createdDate,
     this.editedAt,
-    required this.blogBody,
-    required this.imageURL,
+    required this.blogContent,
+    this.imageData, //stores image data...
   });
+
+
+  // Since we're working with sqf lite for persisting the blog data
+  // Methods for converting a blog object to a map and vice versa are needed
+  // to bridge the gap between the blog data structure and the format
+  // that is required by the database.
+
+
+  // For the conversion of a blog object to map
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'uuid': uuid,
+    'title': title,
+    'blogContent': blogContent,
+    'created_date': createdDate.toIso8601String(),
+    'edited_at': editedAt?.toIso8601String(),
+    // 'image_url': imageURL,
+  };
+
+  // For the conversion of blog object from a Map for database retrieval
+  factory Blog.fromMap(Map<String, dynamic> map) => Blog (
+    id: map['id'] as int,
+    uuid: map['uuid'] as String,
+    title: map['title'] as String,
+    blogContent: map['blogContent'] as String,
+    createdDate: DateTime.parse(map['created_date'] as String),
+    editedAt: map['edited_at'] != null ? DateTime.parse(map['edited_at'] as String) : null,
+    // imageURL: map['image_url'] as String,
+  );
+
+
 }
 
-//displays created timestamp as an
+// generating a unique id to be attached to each blog item...
+class UUID {
+  final Random _rng;
+
+  UUID() : _rng = Random();
+
+  String generate() =>
+      (_rng.nextDouble() * 1e16).toInt().toRadixString(16).padRight(14, '0');
+}
+
+//displays created timestamp in a way that indicates duration from last update..
 String formatTimeElapsed(DateTime date) {
   Duration difference = DateTime.now().difference(date);
 
@@ -40,9 +91,33 @@ String formatTimeElapsed(DateTime date) {
   }
 }
 
-class UUID {
-  final Random _rng;
-  UUID() : _rng = Random();
-  String generate() =>
-      (_rng.nextDouble() * 1e16).toInt().toRadixString(16).padRight(14, '0');
+Image imageFromBase64String(String? base64String) {
+  return Image.memory(base64Decode(base64String!));
 }
+
+Uint8List dataFromBase64String(String base64String) {
+  return base64Decode(base64String);
+}
+
+String base64String(Uint8List data) {
+  return base64Encode(data);
+}
+
+
+// creates helper methods for encoding and decoding image data...
+
+encodeImage(File imageFile)  async {
+  Uint8List bytes = await imageFile.readAsBytes(); //this returns a Uint8List object
+  return base64.encode(bytes); // convert to string for storage!!
+}
+
+Image decodeImageData(String base64String) {
+    return Image.memory(
+      base64Decode(base64String),
+      fit: BoxFit.fill,
+    );
+}
+
+
+
+

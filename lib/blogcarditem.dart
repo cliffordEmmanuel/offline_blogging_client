@@ -1,37 +1,38 @@
-//this will display a single blog item as a card. It should contain:
-// the blog title on top
-// an except of the blog body (standard 256 characters)
-// an image
-// created at timestamp below...
-
 import 'package:flutter/material.dart';
+
 import 'blog.dart';
-import 'blogdetails.dart';
 
 
 enum Item { view, edit, delete }
 
 class BlogCardItem extends StatelessWidget {
   final Blog? blog;
+  final VoidCallback onView;
   final VoidCallback onDelete;
+  final VoidCallback onEdit;
   final BuildContext context;
 
-  const BlogCardItem({Key? key, this.blog, required this.onDelete, required this.context}) : super(key: key);
-
+  const BlogCardItem(
+      {Key? key,
+      this.blog,
+      required this.onDelete,
+      required this.onEdit,
+      required this.onView,
+      required this.context})
+      : super(key: key);
 
   //handling when i menu item is selected!!
-  void _handleMenuItemSelected(BuildContext context, Item item, Blog blog, ) {
+  void _handleMenuItemSelected(
+    BuildContext context,
+    Item item,
+    Blog blog,
+  ) {
     switch (item) {
       case Item.view:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BlogDetails(blog: blog),
-        ),
-        );
-
+        onView();
         break;
       case Item.edit:
-        print('Edit here!!');
+        onEdit();
         break;
       case Item.delete:
         onDelete();
@@ -72,17 +73,21 @@ class BlogCardItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              formatTimeElapsed(blog.createdDate),
+              "posted ${formatTimeElapsed(blog.createdDate)}",
               style: const TextStyle(
                   fontStyle: FontStyle.italic, color: Colors.grey),
             ),
             PopupMenuButton(
               icon: const Icon(Icons.more_horiz),
-              onSelected: (value) => _handleMenuItemSelected(context, value, blog),
+              onSelected: (value) =>
+                  _handleMenuItemSelected(context, value, blog),
               itemBuilder: (context) => [
-                const PopupMenuItem<Item>(value: Item.view, child: Text('View')),
-                const PopupMenuItem<Item>(value: Item.edit, child: Text('Edit')),
-                const PopupMenuItem<Item>(value: Item.delete, child: Text('Delete')),
+                const PopupMenuItem<Item>(
+                    value: Item.view, child: Text('View')),
+                const PopupMenuItem<Item>(
+                    value: Item.edit, child: Text('Edit')),
+                const PopupMenuItem<Item>(
+                    value: Item.delete, child: Text('Delete')),
               ],
             ),
           ],
@@ -102,7 +107,7 @@ class BlogCardItem extends StatelessWidget {
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
                   blog.title.length > 30
-                      ? "${blog.title.substring(0, 30)}..."
+                      ? blog.title.substring(0, 30)
                       : blog.title,
                   overflow: TextOverflow.fade,
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -114,7 +119,7 @@ class BlogCardItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  blog.blogBody,
+                  blog.blogContent,
                   style: TextStyle(color: Colors.grey),
                   softWrap: true,
                   maxLines: 3, //
@@ -125,72 +130,22 @@ class BlogCardItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        SizedBox(
-          width: 70,
-          height: 70,
-          child: ClipRRect(
-            borderRadius:
-                BorderRadius.circular(8), // specifying a bounded rectangle
-            child: Image.network(
-              blog.imageURL,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _itemFooter(Blog blog) {
-    //will fix later!!!!
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Checkbox(
-          checkColor: Colors.white,
-          fillColor:
-              MaterialStateProperty.resolveWith((states) => Colors.green),
-          value: true,
-          onChanged: (bool? value) {
-            print("blog view");
-            // setState(() {
-            //   value=false;
-            // });
-          },
-        ),
+        // SizedBox(
+        //   width: 70,
+        //   height: 70,
+        //   child: ClipRRect(
+        //     borderRadius:
+        //         BorderRadius.circular(8), // specifying a bounded rectangle
+        //     child: Image.network(
+        //       // blog.imageURL,
+        //       fit: BoxFit.cover,
+        //       errorBuilder: (context, error, stackTrace) {
+        //         return const Center(child: Icon(Icons.error)); // Display error icon
+        //       },
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
 }
-
-//
-// ///////////////////////////////////
-// //building a popupmenu
-//
-// // This is the type used by the popup menu below.
-//
-// class PopupMenu extends StatefulWidget {
-//   final List<PopupMenuItem<Item>> items;
-//
-//   const PopupMenu({Key? key, required this.items}) : super(key: key);
-//
-//   @override
-//   State<PopupMenu> createState() => _PopupMenuState();
-// }
-//
-// class _PopupMenuState extends State<PopupMenu> {
-//   Item? selectedItem;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return PopupMenuButton<Item>(
-//       initialValue: selectedItem,
-//       onSelected: (Item item) {
-//         setState(() {
-//           selectedItem = item;
-//         });
-//       },
-//       itemBuilder: (BuildContext context) => widget.items,
-//     );
-//   }
-// }
