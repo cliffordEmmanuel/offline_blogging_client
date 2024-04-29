@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'blog.dart';
 import 'bloglist.dart';
-import 'data.dart';
+import 'databasehelper.dart';
+import 'blogedit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Blogging Client',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
       home: BlogPage(),
@@ -24,26 +26,29 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Blog page should have a search bar....
+
 class BlogPage extends StatefulWidget {
-  const BlogPage({Key? key}) : super(key: key);
+  const BlogPage({super.key,});
+
 
   @override
   State<BlogPage> createState() => _BlogPageState();
 }
 
 class _BlogPageState extends State<BlogPage> {
-  List<Blog>? createdBlogsList;
-  List<Blog>? deletedBlogsList;
+  Future<List<Blog>>? _blogsFuture; // holds blogs to be retrieved from the db
 
   @override
   void initState() {
     super.initState();
+    _blogsFuture = DatabaseHelper.instance.getBlogs();
+  }
 
-    createdBlogsList = <Blog>[];
-    deletedBlogsList = <Blog>[];
-    createdBlogsList?.addAll(createdBlogs);
-    deletedBlogsList?.addAll(deletedBlogs);
+  void refreshBlogData() {
+    // make a db call when a specific event occurs!!
+    setState(() {
+      _blogsFuture = DatabaseHelper.instance.getBlogs();
+    });
   }
 
   @override
@@ -54,11 +59,15 @@ class _BlogPageState extends State<BlogPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search_outlined),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: SearchResult(createdBlogsList),
-              );
+            onPressed: () async { // to make sure db fetch can happen asynchronously
+              final blogs = await _blogsFuture; // wait for blogs to arrive
+
+              if (blogs != null) {
+                showSearch(
+                  context: context,
+                  delegate: SearchResult(blogs),
+                );
+              }
             },
           )
         ],
@@ -67,28 +76,39 @@ class _BlogPageState extends State<BlogPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Container(
-          //   padding: const EdgeInsets.only(bottom: 5),
-          //   child:
-          //   const Divider(
-          //     color: Colors.grey,
-          //     height: 1,
-          //     indent: 20,
-          //     endIndent: 20,
-          //   ),
-          // ),
+          // Using the Future builder to avoid pre-populating the list
+          // and rely on the db for the blog data
+          FutureBuilder<List<Blog>>(
+            future: _blogsFuture,
+            builder: (context, snapshot) {
+              // if data is available extract it!
+              if (snapshot.hasData) {
+                final blogs = snapshot.data!;
+                blogs.sort((a, b) => b.createdDate.compareTo(a.createdDate)); // sorts by the most recent post
+                return Expanded(
+                  child: BlogsList(
+                    title: "published",
+                    blogs: blogs,
+                    onBlogUpdate: refreshBlogData, // Inform BlogPage
+                  ),
 
-          Expanded(
-            child: BlogsList(
-              title: "published",
-              blogs: createdBlogsList,
-            ),
-          ),
+                );
+                // display and error message if there's an error
+              } else if (snapshot.hasError) {
+                return const Center(child: Text("Error fetching blogs"));
+              }
+              // show loading progress!!
+              return const Center(child: CircularProgressIndicator());
+            },
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print("Button clicked");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => EditBlog(onCreateComplete: refreshBlogData,)),
+          );
         },
         tooltip: "Create new post",
         child: const Icon(Icons.add),
@@ -97,7 +117,7 @@ class _BlogPageState extends State<BlogPage> {
   }
 }
 
-// For handling the search results
+// This is for the search implementation
 class SearchResult extends SearchDelegate {
   List<Blog>? blogsList;
 
@@ -108,7 +128,7 @@ class SearchResult extends SearchDelegate {
     List<Blog> matchQuery = [];
     for (var blog in blogsList!) {
       if (blog.title.toLowerCase().contains(query.toLowerCase()) ||
-          blog.blogBody.toLowerCase().contains(query.toLowerCase())) {
+          blog.blogContent.toLowerCase().contains(query.toLowerCase())) {
         matchQuery.add(blog);
       }
     }
@@ -149,13 +169,12 @@ class SearchResult extends SearchDelegate {
     List<Blog> matchQuery = searchBlogs(query);
     if (matchQuery.isEmpty) {
       return const Center(
-        child: Text('No matching posts found!'),
+        child: Text('No posts found!'),
       );
     }
     return BlogsList(
-        blogs: matchQuery,
-      );
-
+      blogs: matchQuery,
+    );
   }
 
   // this will return suggestions as the user types.
@@ -164,7 +183,7 @@ class SearchResult extends SearchDelegate {
     List<Blog> matchQuery = searchBlogs(query);
     if (matchQuery.isEmpty) {
       return const Center(
-        child: Text('No suggested posts found!'),
+        child: Text('No posts found!'),
       );
     }
     return BlogsList(
@@ -172,21 +191,3 @@ class SearchResult extends SearchDelegate {
     );
   }
 }
-
-// Posts Section !!!
-// class FirstSection extends StatelessWidget {
-//   const FirstSection({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         Text('Posts'),
-//         IconButton(
-//
-//         )
-//       ],
-//     );
-//   }
-// }

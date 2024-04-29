@@ -1,17 +1,44 @@
-//this will display a single blog item as a card. It should contain:
-// the blog title on top
-// an except of the blog body (standard 256 characters)
-// an image
-// created at timestamp below...
-
 import 'package:flutter/material.dart';
+
 import 'blog.dart';
-import 'popup_menu.dart';
+
+
+enum Item { view, edit, delete }
 
 class BlogCardItem extends StatelessWidget {
   final Blog? blog;
+  final VoidCallback onView;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
+  final BuildContext context;
 
-  const BlogCardItem({Key? key, this.blog}) : super(key: key);
+  const BlogCardItem(
+      {Key? key,
+      this.blog,
+      required this.onDelete,
+      required this.onEdit,
+      required this.onView,
+      required this.context})
+      : super(key: key);
+
+  //handling when i menu item is selected!!
+  void _handleMenuItemSelected(
+    BuildContext context,
+    Item item,
+    Blog blog,
+  ) {
+    switch (item) {
+      case Item.view:
+        onView();
+        break;
+      case Item.edit:
+        onEdit();
+        break;
+      case Item.delete:
+        onDelete();
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,15 +73,21 @@ class BlogCardItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              _formatTimeElapsed(blog.createdDate),
+              "posted ${formatTimeElapsed(blog.createdDate)}",
               style: const TextStyle(
                   fontStyle: FontStyle.italic, color: Colors.grey),
             ),
-            const PopupMenu(
-              items: [
-                PopupMenuItem<Item>(value: Item.view, child: Text('view')),
-                PopupMenuItem<Item>(value: Item.edit, child: Text('edit')),
-                PopupMenuItem<Item>(value: Item.delete, child: Text('delete')),
+            PopupMenuButton(
+              icon: const Icon(Icons.more_horiz),
+              onSelected: (value) =>
+                  _handleMenuItemSelected(context, value, blog),
+              itemBuilder: (context) => [
+                const PopupMenuItem<Item>(
+                    value: Item.view, child: Text('View')),
+                const PopupMenuItem<Item>(
+                    value: Item.edit, child: Text('Edit')),
+                const PopupMenuItem<Item>(
+                    value: Item.delete, child: Text('Delete')),
               ],
             ),
           ],
@@ -74,7 +107,7 @@ class BlogCardItem extends StatelessWidget {
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
                   blog.title.length > 30
-                      ? "${blog.title.substring(0, 30)}..."
+                      ? blog.title.substring(0, 30)
                       : blog.title,
                   overflow: TextOverflow.fade,
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -86,8 +119,8 @@ class BlogCardItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  blog.blogBody,
-                  style:  TextStyle(color: Colors.grey),
+                  blog.blogContent,
+                  style: TextStyle(color: Colors.grey),
                   softWrap: true,
                   maxLines: 3, //
                   overflow: TextOverflow.ellipsis,
@@ -97,87 +130,22 @@ class BlogCardItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        SizedBox(
-          width: 70,
-          height: 70,
-          child: ClipRRect(
-            borderRadius:
-                BorderRadius.circular(8), // specifying a bounded rectangle
-            child: Image.network(
-              blog.imageURL,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
+        // SizedBox(
+        //   width: 70,
+        //   height: 70,
+        //   child: ClipRRect(
+        //     borderRadius:
+        //         BorderRadius.circular(8), // specifying a bounded rectangle
+        //     child: Image.network(
+        //       // blog.imageURL,
+        //       fit: BoxFit.cover,
+        //       errorBuilder: (context, error, stackTrace) {
+        //         return const Center(child: Icon(Icons.error)); // Display error icon
+        //       },
+        //     ),
+        //   ),
+        // ),
       ],
-    );
-  }
-
-  Widget _itemFooter(Blog blog) {
-    //will fix later!!!!
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Checkbox(
-          checkColor: Colors.white,
-          fillColor:
-              MaterialStateProperty.resolveWith((states) => Colors.green),
-          value: true,
-          onChanged: (bool? value) {
-            print("blog view");
-            // setState(() {
-            //   value=false;
-            // });
-          },
-        ),
-      ],
-    );
-  }
-}
-
-//displays created timestamp as an
-String _formatTimeElapsed(DateTime date) {
-  Duration difference = DateTime.now().difference(date);
-
-  if (difference.inDays > 0) {
-    return '${difference.inDays}d ago';
-  } else if (difference.inHours > 0) {
-    return '${difference.inHours}h ago';
-  } else if (difference.inMinutes > 0) {
-    return '${difference.inMinutes}m ago';
-  } else {
-    return 'Just now';
-  }
-}
-
-///////////////////////////////////
-//building a popupmenu
-
-// This is the type used by the popup menu below.
-enum Item { view, edit, delete }
-
-class PopupMenu extends StatefulWidget {
-  final List<PopupMenuItem<Item>> items;
-
-  const PopupMenu({Key? key, required this.items}) : super(key: key);
-
-  @override
-  State<PopupMenu> createState() => _PopupMenuState();
-}
-
-class _PopupMenuState extends State<PopupMenu> {
-  Item? selectedItem;
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<Item>(
-      initialValue: selectedItem,
-      onSelected: (Item item) {
-        setState(() {
-          selectedItem = item;
-        });
-      },
-      itemBuilder: (BuildContext context) => widget.items,
     );
   }
 }
