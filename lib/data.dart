@@ -15,7 +15,7 @@ final createdBlogs = [
     title: "Malicious is fair fair fair!!!",
     createdDate: DateTime.now().subtract(const Duration(days: 1)),
     blogBody:
-        ". It is also fair to say that any person or group of persons with malicious intent can exploit these many vulnerabilities. It is therefore crucial to understand the risks associated with mobile apps as well as how they have been addressed so far and the strategies that can be further implemented.",
+        "It is also fair to say that any person or group of persons with malicious intent can exploit these many vulnerabilities. It is therefore crucial to understand the risks associated with mobile apps as well as how they have been addressed so far and the strategies that can be further implemented.",
     imageURL: "https://i.pravatar.cc/300?img=49",
   ),
   Blog(
@@ -24,6 +24,22 @@ final createdBlogs = [
     createdDate: DateTime.now().subtract(const Duration(days: 30)),
     blogBody:
         "This report discusses the current state of mobile app security and outlines strategies that can be implemented within the mobile app development process, the mobile platforms on which these developed apps are run and lastly the app-store ecosystem. ",
+    imageURL: "https://i.pravatar.cc/300?img=50",
+  ),
+  Blog(
+    uuid: uuid.generate(),
+    title: "Testing this Tessssstttingsgseeisnignwineiwqnteiin!!!",
+    createdDate: DateTime.now().subtract(const Duration(days: 5)),
+    blogBody:
+    "This report discusses the current state of mobile app security and outlines strategies that can be implemented within the mobile app development process, the mobile platforms on which these developed apps are run and lastly the app-store ecosystem. ",
+    imageURL: "https://i.pravatar.cc/300?img=50",
+  ),
+  Blog(
+    uuid: uuid.generate(),
+    title: "LETS Go!!!",
+    createdDate: DateTime.now().subtract(const Duration(days: 90)),
+    blogBody:
+    "This report discusses the current state of mobile app security and outlines strategies that can be implemented within the mobile app development process, the mobile platforms on which these developed apps are run and lastly the app-store ecosystem. ",
     imageURL: "https://i.pravatar.cc/300?img=50",
   ),
 ];

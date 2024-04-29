@@ -14,23 +14,14 @@ class BlogsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 16.0),
-          child: Text(title!),
-        ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: blogs?.length ?? 0,
-              itemBuilder: (BuildContext context, int index) {
-                final blog = blogs![index];
-                print(blog.title);
-                return BlogCardItem(blog: blog);
-              }),
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: ListView.builder(
+          itemCount: blogs?.length ?? 0,
+          itemBuilder: (BuildContext context, int index) {
+            final blog = blogs![index];
+            return BlogCardItem(blog: blog);
+          }),
     );
   }
 }
